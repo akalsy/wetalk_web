@@ -1,0 +1,31 @@
+:global {
+    .rc-dialog {
+        width: 450px;
+        top: 45% !important;
+        transform: translateY(-50%) !important;
+    }
+    .rc-dialog-content {
+        width: 100%;
+    }
+    .rc-dialog-title {
+        font-size: 16px !important;
+    }
+    .rc-dialog-wrap {
+        overflow: hidden !important;
+    }
+    .rc-dialog-close {
+        top: 0 !important;
+        right: 10px !important;
+        z-index: 9999;
+    
+        .rc-dialog-close-x {
+            font-size: 32px !important;
+        }
+    }
+    
+    .rc-dialog-body {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        max-height: 60vh;
+    }
+}
