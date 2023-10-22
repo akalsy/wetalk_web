@@ -1,14 +1,15 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import './style/iconfont.less';
 // import { State } from './state/reducer'
 import { useSelector } from 'react-redux';
 import { isMobile } from './utils/ua';
 import inobounce from './utils/inobounce';
 import Style from './App.less';
 import { createContext } from 'react';
-
 import FunctionBarAndLinkmanList from '../src/modules/functionBarAndLinkmanList/functionBarAndLinkmanList'
 
 import LoginAndRegister from '../src/modules/loginAndRegister/loginAndRegister'
+import SideBar from '../src/modules/sideBar/sideBar'
 
 /**
 * 获取窗口宽度百分比
@@ -127,7 +128,7 @@ function App() {
         <ShowUserOrGroupInfoContext.Provider
           value={(contextValue as unknown) as null}
         >
-          <div className={Style.sideBar} />
+          <SideBar />
           <FunctionBarAndLinkmanList />
           <div className={Style.chat} />
         </ShowUserOrGroupInfoContext.Provider>
