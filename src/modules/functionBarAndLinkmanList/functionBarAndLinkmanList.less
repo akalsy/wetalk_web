@@ -21,3 +21,14 @@
 }
 
 
+.container {
+    background-color:rgba(6, 147, 227, 0.5);
+    flex: 1;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+
+    &[data-aero=true] {
+        background-color: rgba(6, 147, 227, 0);
+    }
+}

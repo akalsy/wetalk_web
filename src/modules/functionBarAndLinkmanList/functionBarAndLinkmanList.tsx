@@ -3,10 +3,13 @@ import React from 'react';
 import Style from "./functionBarAndLinkmanList.less"
 import useAction from "../../hooks/useAction"
 import useIsLogin from '../../hooks/useIsLogin';
+import LinkmanList from './LinkmanList';
+import useAero from '../../hooks/useAero';
 
 function FunctionBarAndLinkmanList() {
     const action = useAction();
     const isLogin = useIsLogin();
+    const aero = useAero();
 
     return (
         <div className={Style.functionBarAndLinkmanList} >
@@ -17,7 +20,9 @@ function FunctionBarAndLinkmanList() {
                     // console.log(1)
                 }} role="button"> 登陆</b>后参与聊天
             </div>}
-
+            <div className={Style.container}   {...aero}>
+                <LinkmanList />
+            </div>
         </div>
     );
 }
