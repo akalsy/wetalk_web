@@ -7,10 +7,9 @@ import inobounce from './utils/inobounce';
 import Style from './App.less';
 import { createContext } from 'react';
 import FunctionBarAndLinkmanList from '../src/modules/functionBarAndLinkmanList/functionBarAndLinkmanList'
-
 import LoginAndRegister from '../src/modules/loginAndRegister/loginAndRegister'
 import SideBar from '../src/modules/sideBar/sideBar'
-
+import Chat from '../src/modules/chat/chat'
 /**
 * 获取窗口宽度百分比
 */
@@ -130,7 +129,7 @@ function App() {
         >
           <SideBar />
           <FunctionBarAndLinkmanList />
-          <div className={Style.chat} />
+          <Chat />
         </ShowUserOrGroupInfoContext.Provider>
       </div>
     </div>

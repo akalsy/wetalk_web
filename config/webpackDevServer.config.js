@@ -108,6 +108,8 @@ module.exports = function (proxy, allowedHost) {
       },
       '/avatar': 'http://localhost:9200',
       '/GroupAvatar': 'http://localhost:9200',
+      '/images': 'http://localhost:9200',
+      '/ImageMessage': 'http://localhost:9200'
     },
     onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`

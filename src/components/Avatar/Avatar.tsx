@@ -12,7 +12,6 @@ export default function Avatar({
     onClick,
     size = 60,
 }: Props) {
-    console.log(className)
     return <img className={className}
         src={src}
         style={{ width: size, height: size, borderRadius: size / 2 }}

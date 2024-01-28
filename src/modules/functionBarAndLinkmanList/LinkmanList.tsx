@@ -7,10 +7,13 @@ import Contact from './contacts';
 import Style from './LinkmanList.less';
 
 function LinkmanList() {
-    const linkmans = useSelector((state: State) => state.linkmans);
+    const linkmans = useSelector((state: State) => {
+        console.log(state)
+        return state.linkmans || {}
+    });
 
     function renderLinkman(linkman: Linkman) {
-        const messages = Object.values(linkman.messages);
+        const messages = linkman.messages ? Object.values(linkman.messages) : [];
         const lastMessage =
             messages.length > 0 ? messages[messages.length - 1] : null;
 
@@ -54,9 +57,10 @@ function LinkmanList() {
 
     return (
         <div className={Style.linkmanList}>
-            {Object.values(linkmans)
+            {linkmans != {} && !!linkmans ? Object.values(linkmans)
                 .sort(sort)
-                .map((linkman) => renderLinkman(linkman))}
+                .map((linkman) => renderLinkman(linkman))
+                : null}
         </div>
     );
 }
