@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 import { isMobile } from './utils/ua';
 import inobounce from './utils/inobounce';
 import Style from './App.less';
-import { createContext } from 'react';
 import FunctionBarAndLinkmanList from '../src/modules/functionBarAndLinkmanList/functionBarAndLinkmanList'
 import LoginAndRegister from '../src/modules/loginAndRegister/loginAndRegister'
 import SideBar from '../src/modules/sideBar/sideBar'
 import Chat from '../src/modules/chat/chat'
+import UserInfo from './modules/UserInfo';
+import GroupInfo from './modules/GroupInfo';
+import { ShowUserOrGroupInfoContext } from './context'
 /**
 * 获取窗口宽度百分比
 */
@@ -115,9 +117,7 @@ function App() {
     [],
   );
 
-  // eslint-disable-next-line import/prefer-default-export
-  const ShowUserOrGroupInfoContext = createContext(null);
-  console.log(Style)
+
   return (
     <div className={Style.App}
       style={style}
@@ -132,6 +132,18 @@ function App() {
           <Chat />
         </ShowUserOrGroupInfoContext.Provider>
       </div>
+      <UserInfo
+        visible={userInfoDialog}
+        onClose={() => toggleUserInfoDialog(false)}
+        // @ts-ignore
+        user={userInfo}
+      />
+      <GroupInfo
+        visible={groupInfoDialog}
+        onClose={() => toggleGroupInfoDialog(false)}
+        // @ts-ignore
+        group={groupInfo}
+      />
     </div>
   );
 }

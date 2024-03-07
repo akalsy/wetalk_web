@@ -14,6 +14,7 @@ import OnlineStatus from './onlineStatus'
 import socket from '../../socket';
 
 import Avatar from '../../components/Avatar/Avatar';
+import SelfInfo from './selfInfo'
 export default function SideBar() {
     const avatar = useSelector(
         (state: State) => state.user && state.user.avatar,
@@ -47,6 +48,14 @@ export default function SideBar() {
         socket.connect();
     }
     return <div className={Style.sideBar}>
+        {
+            selfInfoDialogVisible && isLogin && (
+                <SelfInfo
+                    visible={selfInfoDialogVisible}
+                    onClose={() => toggleSelfInfoDialogVisible(false)}
+                />
+            )
+        }
         {isLogin && avatar && (
             <Avatar
                 className={Style.avatar}

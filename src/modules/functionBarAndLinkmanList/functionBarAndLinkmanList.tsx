@@ -5,7 +5,7 @@ import useAction from "../../hooks/useAction"
 import useIsLogin from '../../hooks/useIsLogin';
 import LinkmanList from './LinkmanList';
 import useAero from '../../hooks/useAero';
-
+import FunctionBar from "./FunctionBar"
 function FunctionBarAndLinkmanList() {
     const action = useAction();
     const isLogin = useIsLogin();
@@ -21,6 +21,7 @@ function FunctionBarAndLinkmanList() {
                 }} role="button"> 登陆</b>后参与聊天
             </div>}
             <div className={Style.container}   {...aero}>
+                {isLogin && <FunctionBar/>}
                 <LinkmanList />
             </div>
         </div>
