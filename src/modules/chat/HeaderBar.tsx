@@ -3,7 +3,8 @@ import React from 'react'
 import Style from './HeaderBar.less'
 import useAero from '../../hooks/useAero';
 import useIsLogin from '../../hooks/useIsLogin';
-
+import CopyToClipboard from 'react-copy-to-clipboard';
+import Message from "../../components/Message/Message"
 interface Props {
     id: string,
     name: string,
@@ -21,10 +22,13 @@ export default function HeaderBar(props: Props) {
         isOnline,
         onClickFunction,
     } = props;
+
     const aero = useAero();
     const isLogin = useIsLogin();
-    console.log(onlineMembersCount)
-    console.log(isOnline)
+
+    function handleShareGroup() {
+        Message.success('已复制邀请链接到粘贴板, 去邀请其它人加入群组吧');
+    }
     return <div className={Style.headerBar} {...aero}>
         <h2 className={Style.name}>
             {name && (
@@ -44,5 +48,14 @@ export default function HeaderBar(props: Props) {
             )}
 
         </h2>
+
+        <div className={Style.rightButtonContainer}>
+            {type == 'group' && <CopyToClipboard
+                text={`${window.location.origin}/invite/group/${id}`}
+            >
+                <i className={`iconfont icon-fenxiang ${Style.caidan}`} onClick={handleShareGroup} />
+            </CopyToClipboard>}
+            <i className={`iconfont icon-caidan ${Style.caidan}`} onClick={onClickFunction} />
+        </div>
     </div>
 }

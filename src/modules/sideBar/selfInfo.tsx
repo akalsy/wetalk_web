@@ -7,18 +7,23 @@ import Avatar from '../../components/Avatar/Avatar';
 import readDiskFile from '../../utils/readDiskFile';
 import { useSelector } from 'react-redux';
 import Button from '../../components/Button/Button';
+import Input from '../../components/Input/Input';
 import Message from "../../components/Message/Message"
 import { State } from '../../state/reducer';
 import uploadFile, { getOSSFileUrl } from '../../utils/uploadFile';
 import useAction from '../../hooks/useAction';
-
+import socket from '../../socket';
+import store from "../../state/store"
 import "cropperjs/dist/cropper.css";
-import { changeAvatar } from "../../service";
+import { changeAvatar, changePassword, changeUsername } from "../../service";
 interface SelfInfoProps {
     visible: boolean;
     onClose: () => void;
 }
 export default function SelfInfo(props: SelfInfoProps) {
+    const user = store.getState().user;
+    const curUserName = user?.username || "";
+
     const action = useAction()
     const avatar = useSelector(
         (state: State) => state.user && state.user.avatar,
@@ -49,7 +54,7 @@ export default function SelfInfo(props: SelfInfoProps) {
         try {
             const avatarUrl = await uploadFile(
                 blob,
-                `Avatar/${userId}_${Date.now()}.${ext}`,
+                `avatar/${userId}_${Date.now()}.${ext}`,
             );
             const isSuccess = await changeAvatar(avatarUrl);
             if (isSuccess) {
@@ -65,17 +70,40 @@ export default function SelfInfo(props: SelfInfoProps) {
         }
 
     }
-    function changeAvatar(url: string): Boolean {
-        console.log(url)
-        return true
-    }
-
     // 保存头像
     const handleChangeAvatar = () => {
         // @ts-ignore
         cropper?.getCroppedCanvas().toBlob(async (blob: any) => {
             uploadAvatar(blob, cropper.ext);
         });
+    }
+
+
+    const handleChangePassWord = async () => {
+        const isSuccess = await changePassword(oldPassword, newPassword);
+        console.log(isSuccess)
+        if (isSuccess) {
+            onClose();
+            reLogin('修改密码成功, 请使用新密码重新登录');
+        }
+    }
+
+
+    const handleChangeUserName = async () => {
+        const isSuccess = await changeUsername(newUserName);
+        console.log(isSuccess)
+        if (isSuccess) {
+            onClose();
+            reLogin('用户名修改成功, 请使用新密码重新登录');
+        }
+    }
+    const reLogin = (msg: string): void => {
+
+        action.logout();
+        window.localStorage.removeItem('token');
+        Message.success(msg);
+        socket.disconnect();
+        socket.connect();
     }
     const [cropper, setCropper] = useState({
         enable: false,
@@ -114,6 +142,10 @@ export default function SelfInfo(props: SelfInfoProps) {
     function onCropperInit(cropper: any) {
         setCropper(cropper)
     }
+
+    const [newPassword, newPasswordChange] = useState('')
+    const [oldPassword, oldPasswordChange] = useState('')
+    const [newUserName, newUserNameChange] = useState(curUserName)
     return <Dialog
         className={Style.selfInfo}
         visible={visible}
@@ -154,16 +186,28 @@ export default function SelfInfo(props: SelfInfoProps) {
 
             <div className={Common.block}>
                 <p className={Common.title}>修改密码</p>
-
+                <Input onChange={newPasswordChange} value={newPassword} placeholder="新密码" className={Style.input} />
+                <Input onChange={oldPasswordChange} value={oldPassword} placeholder="旧密码" className={Style.input} />
 
                 <Button
                     className={Style.button}
-                    onClick={handleChangeAvatar}
+                    onClick={handleChangePassWord}
                 >
                     保存密码
                 </Button>
-
             </div>
+            <div className={Common.block}>
+                <p className={Common.title}>修改用户名</p>
+                <Input onChange={newUserNameChange} value={newUserName} placeholder="用户名" className={Style.input} />
+
+                <Button
+                    className={Style.button}
+                    onClick={handleChangeUserName}
+                >
+                    保存用户名
+                </Button>
+            </div>
+
         </div>
 
 

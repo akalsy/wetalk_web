@@ -12,6 +12,9 @@ import Chat from '../src/modules/chat/chat'
 import UserInfo from './modules/UserInfo';
 import GroupInfo from './modules/GroupInfo';
 import { ShowUserOrGroupInfoContext } from './context'
+import useIsLogin from './hooks/useIsLogin';
+import useAction from './hooks/useAction';
+
 /**
 * 获取窗口宽度百分比
 */
@@ -34,6 +37,7 @@ function App() {
   const $app = useRef(null);
   // const isReady = useSelector((state: State) => state.status.ready)
   const backgroundImage = '/GroupAvatar/bk.jpg'
+  const backgroundImage2 = 'https://static.zhihu.com/heifetz/assets/sign_bg.47eec442.png'
   // 计算窗口高度/宽度百分比
   const [width, setWidth] = useState(getWidthPercent());
   const [height, setHeight] = useState(getHeightPercent());
@@ -97,6 +101,14 @@ function App() {
     [width, height],
   );
 
+  // 游客窗口样式
+  const visitorStyle = useMemo(
+    () => ({
+      backgroundImage: `url(${backgroundImage2})`,
+    }),
+    [backgroundImage2],
+  );
+
   const [userInfoDialog, toggleUserInfoDialog] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -116,6 +128,8 @@ function App() {
     }),
     [],
   );
+  const isLogin = useIsLogin();
+  const action = useAction();
 
 
   return (
@@ -132,6 +146,13 @@ function App() {
           <Chat />
         </ShowUserOrGroupInfoContext.Provider>
       </div>
+      {!isLogin && <div className={Style.loginTips} style={visitorStyle}>
+        游客你好，请
+                <b className={Style.loginBton} onClick={() => {
+          action.setStatus('loginRegisterDialogVisible', true)
+          // console.log(1)
+        }} role="button"> 登陆</b>后加入聊天
+      </div>}
       <UserInfo
         visible={userInfoDialog}
         onClose={() => toggleUserInfoDialog(false)}

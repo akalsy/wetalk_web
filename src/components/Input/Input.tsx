@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react"
 
 import Style from './Input.less'
+import IconButton from '../IconButton/IconButton';
 
 interface InputProps {
     value?: string,
@@ -42,6 +43,12 @@ export default function Input(props: InputProps) {
     function handleIMEEnd() {
         setLockEnter(false);
     }
+
+    function handleClickClear() {
+        onChange('');
+        // @ts-ignore
+        $input.current.focus();
+    }
     const $input = useRef(null)
     return <div className={`${Style.inputContainer} ${className}`}>
         <input
@@ -56,6 +63,14 @@ export default function Input(props: InputProps) {
             onCompositionStart={handleIMEStart}
             onCompositionEnd={handleIMEEnd}
             onFocus={onFocus}
+        />
+        <IconButton
+            className={Style.inputIconButton}
+            width={32}
+            height={32}
+            iconSize={18}
+            icon="clear"
+            onClick={handleClickClear}
         />
 
     </div>

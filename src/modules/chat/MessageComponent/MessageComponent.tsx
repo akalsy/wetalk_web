@@ -8,6 +8,7 @@ import Time from '../../../utils/time';
 import client from '../../../config/client';
 import TextMessage from './TextMessage';
 import ImageMessage from './ImageMessage'
+import InviteMessageV2 from './InviteMessageV2'
 
 interface Props {
     id: string;
@@ -98,7 +99,12 @@ export default function MessageComponent(props: Props) {
                     />
                 );
             }
+            case 'inviteV2': {
 
+                return <InviteMessageV2 inviteInfo={content} />;
+
+
+            }
             default:
                 return <div className="unknown">不支持的消息类型</div>;
         }

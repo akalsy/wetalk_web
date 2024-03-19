@@ -12,13 +12,6 @@
     }
 
     :global {
-        .iconfont {
-            color: var(--primary-color-10);
-            &:hover {
-                color: var(--primary-color-8);
-            }
-        }
-
         .online,
         .offline {
             display: inline-block;
@@ -38,6 +31,11 @@
 
 .rightButtonContainer {
     justify-content: flex-end;
+    display: flex;
+    i {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 .name {
@@ -53,4 +51,14 @@
 
 .count {
     font-size: 14px;
+}
+
+.caidan {
+    color: rgba(74, 144, 226, 1);
+    cursor: pointer;
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+    line-height: 44px;
+    text-align: center;
 }
