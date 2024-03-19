@@ -37,7 +37,7 @@ function App() {
   const $app = useRef(null);
   // const isReady = useSelector((state: State) => state.status.ready)
   const backgroundImage = '/GroupAvatar/bk.jpg'
-  const backgroundImage2 = 'https://static.zhihu.com/heifetz/assets/sign_bg.47eec442.png'
+  const backgroundImage2 = '/GroupAvatar/bk.png'
   // 计算窗口高度/宽度百分比
   const [width, setWidth] = useState(getWidthPercent());
   const [height, setHeight] = useState(getHeightPercent());
@@ -87,7 +87,7 @@ function App() {
       backgroundSize: `${backgroundWidth}px ${backgroundHeight}px`,
       backgroundRepeat: 'no-repeat',
     }),
-    [backgroundImage, backgroundWidth, backgroundHeight],
+    [backgroundImage, "100%", backgroundHeight],
   )
 
   // 聊天窗口样式
@@ -105,6 +105,10 @@ function App() {
   const visitorStyle = useMemo(
     () => ({
       backgroundImage: `url(${backgroundImage2})`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "100% 100%",
+      width: `${width * 100}%`,
+      height: `${height * 100}%`,
     }),
     [backgroundImage2],
   );
