@@ -50,6 +50,8 @@
     "prompts": "^2.4.2",
     "randomcolor": "^0.6.2",
     "rc-dialog": "^9.3.3",
+    "rc-dropdown": "^4.2.0",
+    "rc-menu": "^9.13.0",
     "rc-notification": "^3.3.1",
     "rc-tabs": "^9.6.4",
     "rc-tooltip": "^6.1.1",

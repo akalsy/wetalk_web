@@ -7,12 +7,16 @@ import voice from '../../utils/voice';
 import { useSelector } from 'react-redux';
 import useAction from '../../hooks/useAction';
 import { sendMessage } from '../../service';
+
 import xss from '../../utils/xss';
 import Message from '../../components/Message/Message';
-
+import Dropdown from '../../components/Dropdown/Dropdown'
+import { Menu, MenuItem } from '../../components/Menu';
+import readDiskFile, { ReadFileResult } from '../../utils/readDiskFile';
+import uploadFile from '../../utils/uploadFile';
+import { MB } from '../../utils/const';
 let inputIME = false;
 let searchExpressionTimer: number = 0;
-
 export default function ChatInput() {
     const action = useAction();
     const connect = useSelector((state: State) => state.connect);
@@ -126,6 +130,78 @@ export default function ChatInput() {
     function sendHuaji() {
 
     }
+    const config = {
+        maxFileSize: process.env.MaxFileSize
+            ? parseInt(process.env.MaxFileSize, 10)
+            : MB * 10,
+        maxImageSize: process.env.MaxImageSize
+            ? parseInt(process.env.MaxImageSize, 10)
+            : MB * 5,
+    }
+    function sendImageMessage(image: string): void;
+    function sendImageMessage(image: ReadFileResult): void;
+    function sendImageMessage(image: string | ReadFileResult) {
+        if (typeof image === 'string') {
+            const id = addSelfMessage('image', image);
+            handleSendMessage(id, 'image', image);
+            toggleExpressionDialog(false);
+            return;
+        }
+
+        if (image.length > config.maxImageSize) {
+            Message.warning('要发送的图片过大', 3);
+            return;
+        }
+
+        // @ts-ignore
+        const ext = image.type.split('/').pop().toLowerCase();
+        const url = URL.createObjectURL(image.result);
+
+        const img = new Image();
+        img.onload = async () => {
+            const id = addSelfMessage(
+                'image',
+                `${url}?width=${img.width}&height=${img.height}`,
+            );
+            try {
+                const imageUrl = await uploadFile(
+                    image.result as Blob,
+                    `ImageMessage/${selfId}_${Date.now()}.${ext}`,
+                );
+                handleSendMessage(
+                    id,
+                    'image',
+                    `${imageUrl}?width=${img.width}&height=${img.height}`,
+                    focus,
+                );
+            } catch (err) {
+                console.error(err);
+                Message.error('上传图片失败');
+            }
+        };
+        img.src = url;
+    }
+    async function handleSendImage() {
+        if (!connect) {
+            return Message.error('发送消息失败, 您当前处于离线状态');
+        }
+        const image = await readDiskFile(
+            'blob',
+            'image/png,image/jpeg,image/gif',
+        );
+        if (!image) {
+            return null;
+        }
+        sendImageMessage(image);
+        return null;
+    }
+
+    function toggleCodeEditorDialog(codeEditor: boolean) {
+
+    }
+    function handleSendFile() {
+
+    }
     function toggleExpressionDialog(diolagVisiable: Boolean) {
 
     }
@@ -207,8 +283,59 @@ export default function ChatInput() {
     function toggleInputFocus(focus: boolean) {
 
     }
+    function handleFeatureMenuClick({
+        key,
+        domEvent,
+    }: {
+        key: string;
+        domEvent: any;
+    }) {
+        // Quickly hitting the Enter key causes the button to repeatedly trigger the problem
+        if (domEvent.keyCode === 13) {
+            return;
+        }
+
+        switch (key) {
+            case 'image': {
+                handleSendImage();
+                break;
+            }
+            case 'huaji': {
+                sendHuaji();
+                break;
+            }
+            case 'code': {
+                toggleCodeEditorDialog(true);
+                break;
+            }
+            case 'file': {
+                handleSendFile();
+                break;
+            }
+            default:
+        }
+    }
     const $input = useRef(null)
     return <div className={Style.chatInput} {...aero}>
+
+        <Dropdown
+            trigger={['click']}
+            overlay={
+                <div className={Style.featureDropdown}>
+                    <Menu onClick={handleFeatureMenuClick}>
+                        <MenuItem key="huaji">发送滑稽</MenuItem>
+                        <MenuItem key="image">发送图片</MenuItem>
+                        <MenuItem key="code">发送代码</MenuItem>
+                        <MenuItem key="file">发送文件</MenuItem>
+                    </Menu>
+                </div>
+            }
+            animation="slide-up"
+            placement="topLeft"
+        >
+            <i className={`iconfont icon-caidan1 ${Style.fasong}`} />
+
+        </Dropdown>
         <input
             className={Style.input}
             type="text"
