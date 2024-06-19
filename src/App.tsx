@@ -36,8 +36,7 @@ function getWidthPercent() {
 function App() {
   const $app = useRef(null);
   // const isReady = useSelector((state: State) => state.status.ready)
-  const backgroundImage = '/GroupAvatar/bk.jpg'
-  const backgroundImage2 = '/GroupAvatar/bk.png'
+  const backgroundImage = require('./assets/images/bk.png')
   // 计算窗口高度/宽度百分比
   const [width, setWidth] = useState(getWidthPercent());
   const [height, setHeight] = useState(getHeightPercent());
@@ -104,13 +103,13 @@ function App() {
   // 游客窗口样式
   const visitorStyle = useMemo(
     () => ({
-      backgroundImage: `url(${backgroundImage2})`,
+      backgroundImage: `url(${backgroundImage})`,
       backgroundRepeat: "no-repeat",
       backgroundSize: "100% 100%",
       width: `${width * 100}%`,
       height: `${height * 100}%`,
     }),
-    [backgroundImage2],
+    [backgroundImage],
   );
 
   const [userInfoDialog, toggleUserInfoDialog] = useState(false);
