@@ -9,6 +9,7 @@ import FunctionBarAndLinkmanList from '../src/modules/functionBarAndLinkmanList/
 import LoginAndRegister from '../src/modules/loginAndRegister/loginAndRegister'
 import SideBar from '../src/modules/sideBar/sideBar'
 import Chat from '../src/modules/chat/chat'
+import VideoCall from '../src/modules/videoCall/index'
 import UserInfo from './modules/UserInfo';
 import GroupInfo from './modules/GroupInfo';
 import { ShowUserOrGroupInfoContext } from './context'
@@ -19,18 +20,18 @@ import useAction from './hooks/useAction';
 * 获取窗口宽度百分比
 */
 function getWidthPercent() {
-  let width = 0.6;
-  if (isMobile) {
-    width = 1;
-  } else if (window.innerWidth < 1000) {
-    width = 0.9;
-  } else if (window.innerWidth < 1300) {
-    width = 0.8;
-  } else if (window.innerWidth < 1600) {
-    width = 0.7;
-  } else {
-    width = 0.6;
-  }
+  let width = 0.9;
+  // if (isMobile) {
+  //   width = 1;
+  // } else if (window.innerWidth < 1000) {
+  //   width = 0.9;
+  // } else if (window.innerWidth < 1300) {
+  //   width = 0.8;
+  // } else if (window.innerWidth < 1600) {
+  //   width = 0.7;
+  // } else {
+  //   width = 0.6;
+  // }
   return width;
 }
 function App() {
@@ -112,6 +113,12 @@ function App() {
     [backgroundImage],
   );
 
+  const videoStyle = {
+    backgroundColor: "#fff",
+    width: `${width * 100}%`,
+    height: `${height * 100}%`,
+  }
+
   const [userInfoDialog, toggleUserInfoDialog] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -134,6 +141,7 @@ function App() {
   const isLogin = useIsLogin();
   const action = useAction();
 
+  const [videoCallVisiable, setVideoCallVisiable] = useState(true)
 
   return (
     <div className={Style.App}
@@ -156,6 +164,8 @@ function App() {
           // console.log(1)
         }} role="button"> 登陆</b>后加入聊天
       </div>}
+      {videoCallVisiable && <VideoCall style={videoStyle} closeVideoCall={() => setVideoCallVisiable(false)}>
+      </VideoCall>}
       <UserInfo
         visible={userInfoDialog}
         onClose={() => toggleUserInfoDialog(false)}
