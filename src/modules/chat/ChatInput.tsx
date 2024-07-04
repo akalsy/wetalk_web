@@ -195,6 +195,14 @@ export default function ChatInput() {
         sendImageMessage(image);
         return null;
     }
+    async function handleVideaCall() {
+        if (!connect) {
+            return Message.error('发送消息失败, 您当前处于离线状态');
+        }
+    
+        // sendImageMessage();
+        return null;
+    }
 
     function toggleCodeEditorDialog(codeEditor: boolean) {
 
@@ -312,6 +320,10 @@ export default function ChatInput() {
                 handleSendFile();
                 break;
             }
+            case 'videaCall': {
+                handleVideaCall();
+                break;
+            }
             default:
         }
     }
@@ -327,6 +339,7 @@ export default function ChatInput() {
                         <MenuItem key="image">发送图片</MenuItem>
                         <MenuItem key="code">发送代码</MenuItem>
                         <MenuItem key="file">发送文件</MenuItem>
+                        <MenuItem key="videoCall">视频通话</MenuItem>
                     </Menu>
                 </div>
             }

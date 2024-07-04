@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-28 15:42:39
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-07-02 15:23:22
+ * @LastEditTime: 2024-07-04 14:26:03
  * @FilePath: /fiora/packages/wetalk_web/src/utils/rtcConnect.ts
  * @Description: Description
  */
@@ -88,6 +88,14 @@ export default class RtcConnect {
         return new Promise((resolve) => {
             this.stream.getTracks()[0].stop()
             this.stream.getTracks()[1].stop()
+
+            this.stream.getAudioTracks().forEach(function(track:any) {
+                track.stop();
+            });
+            this.stream.getVideoTracks().forEach(function(track:any) {
+                track.stop();
+            });
+            this.localVideo.current.srcObject = null;
             resolve()
         })
     }

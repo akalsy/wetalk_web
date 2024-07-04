@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-26 13:55:42
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-07-02 16:01:53
+ * @LastEditTime: 2024-07-03 10:59:51
  * @FilePath: /fiora/packages/wetalk_web/src/modules/videoCall/index.tsx
  * @Description: Description
  */
@@ -38,9 +38,9 @@ export default function VideoCall(props: any) {
     const rtcConnect = new RtcConnect(loggerEl, localVideo, remoteVideo, 'offer')
     rtcConnect.startLive(null, selfId);
     async function close() {
-        localVideo.current.pause()
-        await rtcConnect.stopLive();
-        closeVideoCall()
+        let steam = await rtcConnect.stopLive();
+        // localVideo.current.srcObject = steam
+        // closeVideoCall()
     }
 
 
