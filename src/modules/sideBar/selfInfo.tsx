@@ -42,7 +42,7 @@ export default function SelfInfo(props: SelfInfoProps) {
     }
     const onCrop = () => {
         // @ts-ignore
-        console.log(cropper)
+        
     };
     const [loading, toggleLoading] = useState(false);
 
@@ -81,7 +81,7 @@ export default function SelfInfo(props: SelfInfoProps) {
 
     const handleChangePassWord = async () => {
         const isSuccess = await changePassword(oldPassword, newPassword);
-        console.log(isSuccess)
+        
         if (isSuccess) {
             onClose();
             reLogin('修改密码成功, 请使用新密码重新登录');
@@ -91,7 +91,7 @@ export default function SelfInfo(props: SelfInfoProps) {
 
     const handleChangeUserName = async () => {
         const isSuccess = await changeUsername(newUserName);
-        console.log(isSuccess)
+        
         if (isSuccess) {
             onClose();
             reLogin('用户名修改成功, 请使用新密码重新登录');

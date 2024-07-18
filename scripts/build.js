@@ -70,8 +70,8 @@ checkBrowsers(paths.appPath, isInteractive)
   .then(
     ({ stats, previousFileSizes, warnings }) => {
       if (warnings.length) {
-        console.log(chalk.yellow('Compiled with warnings.\n'));
-        console.log(warnings.join('\n\n'));
+        );
+        );
         console.log(
           '\nSearch for the ' +
             chalk.underline(chalk.yellow('keywords')) +
@@ -83,10 +83,10 @@ checkBrowsers(paths.appPath, isInteractive)
             ' to the line before.\n'
         );
       } else {
-        console.log(chalk.green('Compiled successfully.\n'));
+        );
       }
 
-      console.log('File sizes after gzip:\n');
+      ;
       printFileSizesAfterBuild(
         stats,
         previousFileSizes,
@@ -94,7 +94,7 @@ checkBrowsers(paths.appPath, isInteractive)
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       );
-      console.log();
+      ;
 
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrlOrPath;
@@ -118,7 +118,7 @@ checkBrowsers(paths.appPath, isInteractive)
         );
         printBuildError(err);
       } else {
-        console.log(chalk.red('Failed to compile.\n'));
+        );
         printBuildError(err);
         process.exit(1);
       }
@@ -126,14 +126,14 @@ checkBrowsers(paths.appPath, isInteractive)
   )
   .catch(err => {
     if (err && err.message) {
-      console.log(err.message);
+      ;
     }
     process.exit(1);
   });
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
-  console.log('Creating an optimized production build...');
+  ;
 
   const compiler = webpack(config);
   return new Promise((resolve, reject) => {

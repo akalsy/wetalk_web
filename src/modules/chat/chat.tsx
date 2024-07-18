@@ -15,7 +15,7 @@ import {
 } from '../../service';
 import { ShowUserOrGroupInfoContext } from '../../context';
 export default function Chat() {
-    const focus = useSelector((state: State) => { console.log(state); return state.focus });
+    const focus = useSelector((state: State) => { ; return state.focus });
     const isLogin = useIsLogin();
     const action = useAction();
     const self = useSelector((state: State) => state.user?._id) || '';
@@ -23,7 +23,7 @@ export default function Chat() {
     const [groupManagePanel, toggleGroupManagePanel] = useState(false);
     const context = useContext(ShowUserOrGroupInfoContext);
 
-console.log(linkman)
+
 
     function handleBodyClick(e: MouseEvent) {
         const { currentTarget } = e;
@@ -73,7 +73,7 @@ console.log(linkman)
         }
     }
     async function fetchUserOnlineStatus() {
-        console.log(focus)
+        
         const isOnline = await getUserOnlineStatus(focus.replace(self, ''));
         action.setLinkmanProperty(focus, 'isOnline', isOnline);
     }
@@ -91,7 +91,7 @@ console.log(linkman)
         return () => clearInterval(timer);
     }, [focus]);
 
-    console.log(linkman)
+    
     return <div className={Style.chat}>
         <HeaderBar
             id={linkman._id}

@@ -19,7 +19,7 @@ export default function VideoCall(props: any) {
     const loggerEl: any = useRef(null)
     const selfId = useSelector((state: State) => state?.user?._id ? state.user._id : "");
 
-    console.log(localVideo)
+    
     useEffect(() => {
         if (localVideo?.current) {
             localVideo.current.onloadeddata = () => {

@@ -161,7 +161,7 @@ function App() {
         游客你好，请
                 <b className={Style.loginBton} onClick={() => {
           action.setStatus('loginRegisterDialogVisible', true)
-          // console.log(1)
+          // 
         }} role="button"> 登陆</b>后加入聊天
       </div>}
       {videoCallVisiable && <VideoCall style={videoStyle} closeVideoCall={() => setVideoCallVisiable(false)}>

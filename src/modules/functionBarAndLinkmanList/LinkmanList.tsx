@@ -8,7 +8,7 @@ import Style from './LinkmanList.less';
 
 function LinkmanList() {
     const linkmans = useSelector((state: State) => {
-        console.log(state)
+        
         return state.linkmans || {}
     });
 

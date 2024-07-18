@@ -122,7 +122,7 @@ export default function FunctionBar() {
         count = Math.min(count, users.length);
 
         function handleClick(targetUser: any) {
-            console.log(context)
+            
             // @ts-ignore
             context.showUserInfo(targetUser);
             resetSearch();
