@@ -2,8 +2,8 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-28 15:42:39
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-07-04 14:26:03
- * @FilePath: /fiora/packages/wetalk_web/src/utils/rtcConnect.ts
+ * @LastEditTime: 2024-07-18 15:26:18
+ * @FilePath: /wetalk_web/src/utils/rtcConnect.ts
  * @Description: Description
  */
 import { sendMessage } from '../service';
@@ -36,7 +36,7 @@ export default class RtcConnect {
         this.loggerEl.current.innerHTML += `<span class="error">${new Date().toLocaleTimeString()}：${msg}</span><br/>`;
     }
 
-    peerConnection(selfId: string) {
+    peerConnection(focus: string) {
         const PeerConnection =
             window.RTCPeerConnection ||
             (window as any).mozRTCPeerConnection ||
@@ -52,14 +52,14 @@ export default class RtcConnect {
         this.peer.onicecandidate = (e: { candidate: any }) => {
             if (e.candidate) {
                 this.messageLog('搜集并发送候选人');
-                sendMessage(
-                    selfId,
-                    'videoCall',
-                    JSON.stringify({
-                        type: `${this.target}_ice`,
-                        iceCandidate: e.candidate,
-                    }),
-                );
+                // sendMessage(
+                //     focus,
+                //     'videoCallOffer',
+                //     JSON.stringify({
+                //         type: `${this.target}_ice`,
+                //         iceCandidate: e.candidate,
+                //     }),
+                // );
             } else {
                 this.messageLog('候选人收集完成！');
             }
@@ -85,21 +85,34 @@ export default class RtcConnect {
     // //     }
     // // };
     async stopLive() {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
             this.stream.getTracks()[0].stop()
             this.stream.getTracks()[1].stop()
 
-            this.stream.getAudioTracks().forEach(function(track:any) {
+            this.stream.getAudioTracks().forEach(function (track: any) {
                 track.stop();
             });
-            this.stream.getVideoTracks().forEach(function(track:any) {
+            this.stream.getVideoTracks().forEach(function (track: any) {
                 track.stop();
             });
             this.localVideo.current.srcObject = null;
             resolve()
         })
     }
-    async startLive(offerSdp: any, selfId: string) {
+
+    async answerCall(offerSdp: any, focus: string) {
+        this.messageLog('接收到发送方SDP');
+        await this.peer.setRemoteDescription(offerSdp);
+
+        this.messageLog('创建接收方（应答）SDP');
+        const answer = await this.peer.createAnswer();
+        this.messageLog(`传输接收方（应答）SDP`);
+        sendMessage(focus, 'videoCallAnswer', JSON.stringify(answer));
+        await this.peer.setLocalDescription(answer);
+    }
+
+
+    async startLive(toUserId: string) {
         try {
             this.messageLog('尝试调取本地摄像头/麦克风');
             this.stream = await navigator.mediaDevices.getUserMedia({
@@ -112,11 +125,10 @@ export default class RtcConnect {
             this.messageError('摄像头/麦克风获取失败！');
             return;
         }
-        this.peerConnection(selfId);
+        this.peerConnection(toUserId);
 
         this.messageLog(
-            `------ WebRTC ${
-            this.target === 'offer' ? '发起方' : '接收方'
+            `------ WebRTC ${this.target === 'offer' ? '发起方' : '接收方'
             }流程开始 ------`,
         );
         this.messageLog('将媒体轨道添加到轨道集');
@@ -124,22 +136,10 @@ export default class RtcConnect {
             this.peer.addTrack(track, this.stream);
         });
 
-        if (!offerSdp) {
-            this.messageLog('创建本地SDP');
-            const offer = await this.peer.createOffer();
-            await this.peer.setLocalDescription(offer);
-
-            this.messageLog(`传输发起方本地SDP`);
-            sendMessage(selfId, 'videoCall', JSON.stringify(offer));
-        } else {
-            this.messageLog('接收到发送方SDP');
-            await this.peer.setRemoteDescription(offerSdp);
-
-            this.messageLog('创建接收方（应答）SDP');
-            const answer = await this.peer.createAnswer();
-            this.messageLog(`传输接收方（应答）SDP`);
-            sendMessage(selfId, 'videoCall', JSON.stringify(answer));
-            await this.peer.setLocalDescription(answer);
-        }
+        this.messageLog('创建本地SDP');
+        const offer = await this.peer.createOffer();
+        await this.peer.setLocalDescription(offer);
+        this.messageLog(`传输发起方本地SDP`);
+        sendMessage(toUserId, 'videoCallOffer', JSON.stringify(offer));
     }
 }

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import './style/iconfont.less';
-// import { State } from './state/reducer'
+import { State } from './state/reducer'
 import { useSelector } from 'react-redux';
 import { isMobile } from './utils/ua';
 import inobounce from './utils/inobounce';
@@ -15,6 +15,8 @@ import GroupInfo from './modules/GroupInfo';
 import { ShowUserOrGroupInfoContext } from './context'
 import useIsLogin from './hooks/useIsLogin';
 import useAction from './hooks/useAction';
+import useIsVideoCall from './hooks/useIsVideoCall';
+
 
 /**
 * 获取窗口宽度百分比
@@ -141,14 +143,17 @@ function App() {
   const isLogin = useIsLogin();
   const action = useAction();
 
-  const [videoCallVisiable, setVideoCallVisiable] = useState(true)
-
+  // const [videoCallVisiable, setVideoCallVisiable] = useState(false)
+  const videoCallState = useIsVideoCall()
+  function setVideoCallVisiable(state: boolean) {
+    action.openVideoCall(state)
+  }
   return (
     <div className={Style.App}
       style={style}
     >
       <LoginAndRegister></LoginAndRegister>
-      <div className={Style.child} style={childStyle}>
+      {isLogin && <div className={Style.child} style={childStyle}>
         <ShowUserOrGroupInfoContext.Provider
           value={(contextValue as unknown) as null}
         >
@@ -156,28 +161,28 @@ function App() {
           <FunctionBarAndLinkmanList />
           <Chat />
         </ShowUserOrGroupInfoContext.Provider>
-      </div>
+      </div>}
       {!isLogin && <div className={Style.loginTips} style={visitorStyle}>
         游客你好，请
-                <b className={Style.loginBton} onClick={() => {
+        <b className={Style.loginBton} onClick={() => {
           action.setStatus('loginRegisterDialogVisible', true)
-          // 
+          // console.log(1)
         }} role="button"> 登陆</b>后加入聊天
       </div>}
-      {videoCallVisiable && <VideoCall style={videoStyle} closeVideoCall={() => setVideoCallVisiable(false)}>
+      {videoCallState && <VideoCall style={videoStyle} closeVideoCall={() => setVideoCallVisiable(false)} setVideoCallState={() => setVideoCallVisiable(true)}>
       </VideoCall>}
-      <UserInfo
+      {isLogin && <UserInfo
         visible={userInfoDialog}
         onClose={() => toggleUserInfoDialog(false)}
         // @ts-ignore
         user={userInfo}
-      />
-      <GroupInfo
+      />}
+      {isLogin && <GroupInfo
         visible={groupInfoDialog}
         onClose={() => toggleGroupInfoDialog(false)}
         // @ts-ignore
         group={groupInfo}
-      />
+      />}
     </div>
   );
 }

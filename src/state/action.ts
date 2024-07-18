@@ -38,6 +38,10 @@ export enum ActionTypes {
     Disconnect = 'Disconnect',
     /** Aliyun OSS ready */
     Ready = 'Ready',
+    /** videoCall */
+    VideoCall = "VideoCall",
+    /** 视频流程 */
+    MessageOfVideoCall = "MessageOfVideoCall"
 }
 
 export type SetGuestPayload = Group;

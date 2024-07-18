@@ -23,6 +23,8 @@ import {
     getLinkmansLastMessagesV2,
 } from './service';
 import store from './state/store'
+// import useAction from './hooks/useAction';
+// const action = useAction();
 
 const { dispatch } = store;
 
@@ -111,7 +113,22 @@ window.onblur = () => {
 };
 
 let prevFrom: string | null = '';
+
 let prevName = '';
+
+type UserId = string | undefined
+function dealVideoCall(message:any, userId:UserId){
+    if(message.to.includes(userId)) {
+        dispatch({
+            type: ActionTypes.MessageOfVideoCall,
+            payload: message
+        });
+        dispatch({
+            type: ActionTypes.VideoCall,
+            payload: true
+        });
+    }
+}
 socket.on('message', async (message: any) => {
     convertMessage(message);
 
@@ -128,6 +145,11 @@ socket.on('message', async (message: any) => {
 
     const linkman = state.linkmans[message.to];
     let title = '';
+    // (linkman)
+    if(message.type == 'videoCallOffer') {
+        return dealVideoCall(message, state.user?._id)
+    }
+
     if (linkman) {
         dispatch({
             type: ActionTypes.AddLinkmanMessage,

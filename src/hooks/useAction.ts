@@ -23,6 +23,13 @@ export default function useAction() {
             });
         },
 
+        openVideoCall(visible: boolean) {
+            dispatch({
+                type: ActionTypes.VideoCall,
+                payload: visible
+            });
+        },
+
         setAvatar(avatar: string) {
             dispatch({
                 type: ActionTypes.SetAvatar,

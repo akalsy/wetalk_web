@@ -141,6 +141,7 @@ export interface State {
         /** enable search expression when input some phrase */
         enableSearchExpression: boolean;
     };
+    videoCall: boolean
 }
 
 /**
@@ -260,6 +261,7 @@ export const initialState: State = {
         functionBarAndLinkmanListVisible: !isMobile,
         enableSearchExpression: localStorage.enableSearchExpression,
     },
+    videoCall: false
 };
 
 function reducer(state: State = initialState, action: Action): State {
@@ -285,7 +287,12 @@ function reducer(state: State = initialState, action: Action): State {
                 connect: false,
             };
         }
-
+        case ActionTypes.VideoCall: {
+            return {
+                ...state,
+                videoCall: action.payload as boolean,
+            };
+        }
         case ActionTypes.SetGuest: {
             const group = action.payload as Linkman;
             transformGroup(group);

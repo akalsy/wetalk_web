@@ -2,8 +2,8 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-26 13:55:42
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-07-03 10:59:51
- * @FilePath: /fiora/packages/wetalk_web/src/modules/videoCall/index.tsx
+ * @LastEditTime: 2024-07-18 15:27:20
+ * @FilePath: /wetalk_web/src/modules/videoCall/index.tsx
  * @Description: Description
  */
 import React, { useRef, useEffect } from 'react'
@@ -19,7 +19,7 @@ export default function VideoCall(props: any) {
     const loggerEl: any = useRef(null)
     const selfId = useSelector((state: State) => state?.user?._id ? state.user._id : "");
 
-    
+    console.log(localVideo)
     useEffect(() => {
         if (localVideo?.current) {
             localVideo.current.onloadeddata = () => {
@@ -36,7 +36,7 @@ export default function VideoCall(props: any) {
 
 
     const rtcConnect = new RtcConnect(loggerEl, localVideo, remoteVideo, 'offer')
-    rtcConnect.startLive(null, selfId);
+    // rtcConnect.startLive(null, selfId);
     async function close() {
         let steam = await rtcConnect.stopLive();
         // localVideo.current.srcObject = steam
