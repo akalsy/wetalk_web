@@ -141,7 +141,9 @@ export interface State {
         /** enable search expression when input some phrase */
         enableSearchExpression: boolean;
     };
-    videoCall: boolean
+    videoCall: boolean;
+    messageOfVideoCall: Message
+
 }
 
 /**
@@ -261,7 +263,22 @@ export const initialState: State = {
         functionBarAndLinkmanListVisible: !isMobile,
         enableSearchExpression: localStorage.enableSearchExpression,
     },
-    videoCall: false
+    videoCall: false,
+    messageOfVideoCall: {
+        _id: "",
+        type: "",
+        content: "",
+        from: {
+            _id: "",
+            username: '',
+            avatar: "",
+            originUsername: "",
+            tag: "",
+        },
+        createTime: "",
+        loading: false,
+        percent: 0
+    }
 };
 
 function reducer(state: State = initialState, action: Action): State {
@@ -595,7 +612,7 @@ function reducer(state: State = initialState, action: Action): State {
                     ...state.linkmans[payload.linkmanId].messages,
                     [payload.messageId]: {
                         ...state.linkmans[payload.linkmanId].messages[
-                            payload.messageId
+                        payload.messageId
                         ],
                         ...payload.value,
                     },

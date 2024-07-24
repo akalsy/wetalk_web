@@ -146,7 +146,7 @@ function App() {
   // const [videoCallVisiable, setVideoCallVisiable] = useState(false)
   const videoCallState = useIsVideoCall()
   function setVideoCallVisiable(state: boolean) {
-    action.openVideoCall(state)
+    action.setVideoCallState(state)
   }
   return (
     <div className={Style.App}

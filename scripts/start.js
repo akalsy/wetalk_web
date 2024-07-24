@@ -61,7 +61,7 @@ if (process.env.HOST) {
   console.log(
     `Learn more here: ${chalk.yellow('https://cra.link/advanced-config')}`
   );
-  ;
+  console.log();
 }
 
 // We require that you explicitly set browsers and do not fall back to
@@ -127,7 +127,7 @@ checkBrowsers(paths.appPath, isInteractive)
         );
       }
 
-      );
+      console.log(chalk.cyan('Starting the development server...\n'));
       openBrowser(urls.localUrlForBrowser);
     });
 
@@ -148,7 +148,7 @@ checkBrowsers(paths.appPath, isInteractive)
   })
   .catch(err => {
     if (err && err.message) {
-      ;
+      console.log(err.message);
     }
     process.exit(1);
   });

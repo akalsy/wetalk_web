@@ -118,6 +118,7 @@ let prevName = '';
 
 type UserId = string | undefined
 function dealVideoCall(message:any, userId:UserId){
+    console.log(message)
     if(message.to.includes(userId)) {
         dispatch({
             type: ActionTypes.MessageOfVideoCall,
@@ -130,6 +131,7 @@ function dealVideoCall(message:any, userId:UserId){
     }
 }
 socket.on('message', async (message: any) => {
+    console.log("message:", message)
     convertMessage(message);
 
     const state = store.getState();

@@ -23,7 +23,7 @@ export default function useAction() {
             });
         },
 
-        openVideoCall(visible: boolean) {
+        setVideoCallState(visible: boolean) {
             dispatch({
                 type: ActionTypes.VideoCall,
                 payload: visible

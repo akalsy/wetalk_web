@@ -175,7 +175,6 @@ export default function ChatInput() {
                     focus,
                 );
             } catch (err) {
-                console.error(err);
                 Message.error('上传图片失败');
             }
         };
@@ -199,8 +198,8 @@ export default function ChatInput() {
         if (!connect) {
             return Message.error('发送消息失败, 您当前处于离线状态');
         }
-    
-        // sendImageMessage();
+
+        action.setVideoCallState(true)
         return null;
     }
 
@@ -320,7 +319,7 @@ export default function ChatInput() {
                 handleSendFile();
                 break;
             }
-            case 'videaCall': {
+            case 'videoCall': {
                 handleVideaCall();
                 break;
             }
