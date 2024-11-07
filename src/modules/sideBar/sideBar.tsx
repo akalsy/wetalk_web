@@ -1,3 +1,11 @@
+/*
+ * @Author: akalsy hermanyu666@gmail.com
+ * @Date: 2023-10-19 15:32:31
+ * @LastEditors: akalsy hermanyu666@gmail.com
+ * @LastEditTime: 2024-11-03 17:00:50
+ * @FilePath: /wetalk_web/src/modules/sideBar/sideBar.tsx
+ * @Description: Description
+ */
 
 
 import React, { useState } from 'react'
@@ -19,6 +27,10 @@ export default function SideBar() {
     const avatar = useSelector(
         (state: State) => state.user && state.user.avatar,
     );
+    const userName = useSelector(
+        (state: State) => state.user && state.user.username,
+    );
+    
     const isConnect = useSelector((state: State) => state.connect);
     const action = useAction();
 
@@ -62,6 +74,9 @@ export default function SideBar() {
                 src={avatar}
                 onClick={() => toggleSelfInfoDialogVisible(true)}
             />
+        )}
+        {isLogin  && (
+            <div className={Style.username}>{userName}</div>
         )}
         {isLogin && (
             <OnlineStatus

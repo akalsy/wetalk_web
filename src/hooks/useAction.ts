@@ -30,6 +30,13 @@ export default function useAction() {
             });
         },
 
+        setMessageOfVideoCall(message: any) {
+            dispatch({
+                type: ActionTypes.MessageOfVideoCall,
+                payload: message
+            });
+        },
+
         setAvatar(avatar: string) {
             dispatch({
                 type: ActionTypes.SetAvatar,

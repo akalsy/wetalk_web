@@ -310,6 +310,12 @@ function reducer(state: State = initialState, action: Action): State {
                 videoCall: action.payload as boolean,
             };
         }
+        case ActionTypes.MessageOfVideoCall: {
+            return {
+                ...state,
+                messageOfVideoCall: action.payload as Message,
+            };
+        }
         case ActionTypes.SetGuest: {
             const group = action.payload as Linkman;
             transformGroup(group);

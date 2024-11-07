@@ -200,6 +200,9 @@ export default function ChatInput() {
         }
 
         action.setVideoCallState(true)
+        action.setMessageOfVideoCall({
+            type: "startLive"
+        })
         return null;
     }
 

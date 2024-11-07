@@ -1,3 +1,11 @@
+/*
+ * @Author: akalsy hermanyu666@gmail.com
+ * @Date: 2024-07-18 15:14:01
+ * @LastEditors: akalsy hermanyu666@gmail.com
+ * @LastEditTime: 2024-11-03 21:55:10
+ * @FilePath: /wetalk_web/src/modules/chat/MessageList.tsx
+ * @Description: Description
+ */
 import React, { useRef } from 'react'
 import Style from './MessageList.less'
 import { useSelector } from 'react-redux'
@@ -71,7 +79,7 @@ export default function Chat() {
             onScroll={handleScroll}
             ref={$list}
         >
-            {messages != {}  && messages ? Object.values(messages).map((message) =>
+            {messages != null  && messages ? Object.values(messages).map((message) =>
                 renderMessage(message),
             ) : null}
 

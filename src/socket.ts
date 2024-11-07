@@ -117,8 +117,7 @@ let prevFrom: string | null = '';
 let prevName = '';
 
 type UserId = string | undefined
-function dealVideoCall(message:any, userId:UserId){
-    console.log(message)
+function dealVideoCallOffer(message:any, userId:UserId){
     if(message.to.includes(userId)) {
         dispatch({
             type: ActionTypes.MessageOfVideoCall,
@@ -149,7 +148,7 @@ socket.on('message', async (message: any) => {
     let title = '';
     // (linkman)
     if(message.type == 'videoCallOffer') {
-        return dealVideoCall(message, state.user?._id)
+        return dealVideoCallOffer(message, state.user?._id)
     }
 
     if (linkman) {

@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-28 15:42:39
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-07-23 10:17:30
+ * @LastEditTime: 2024-11-04 11:20:14
  * @FilePath: /wetalk_web/src/utils/rtcConnect.ts
  * @Description: Description
  */
@@ -52,14 +52,14 @@ export default class RtcConnect {
         this.peer.onicecandidate = (e: { candidate: any }) => {
             if (e.candidate) {
                 this.messageLog('搜集并发送候选人');
-                // sendMessage(
-                //     focus,
-                //     'videoCallOffer',
-                //     JSON.stringify({
-                //         type: `${this.target}_ice`,
-                //         iceCandidate: e.candidate,
-                //     }),
-                // );
+                sendMessage(
+                    focus,
+                    'videoCallOffer',
+                    JSON.stringify({
+                        type: `${this.target}_ice`,
+                        iceCandidate: e.candidate,
+                    }),
+                );
             } else {
                 this.messageLog('候选人收集完成！');
             }
@@ -67,23 +67,6 @@ export default class RtcConnect {
         !PeerConnection && this.messageError('浏览器不支持WebRTC！');
     }
 
-    // // const socket = new WebSocket('ws://localhost:8080');
-    // // socket.onopen = () => {
-    // //     message.log('信令通道创建成功！');
-    // // }
-    // // socket.onerror = () => message.error('信令通道创建失败！');
-    // // socket.onmessage = e => {
-    // //     const { type, sdp, iceCandidate } = JSON.parse(e.data)
-    // //     if (type === 'answer') {
-    // //         peer.setRemoteDescription(new RTCSessionDescription({ type, sdp }));
-    // //     } else if (type === 'answer_ice') {
-    // //         peer.addIceCandidate(iceCandidate);
-    // //     } else if (type === 'offer') {
-    // //         startLive(new RTCSessionDescription({ type, sdp }));
-    // //     } else if (type === 'offer_ice') {
-    // //         peer.addIceCandidate(iceCandidate);
-    // //     }
-    // // };
     async stopLive() {
         return new Promise<void>((resolve) => {
             if(this.stream) {
