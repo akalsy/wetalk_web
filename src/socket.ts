@@ -26,6 +26,7 @@ import store from './state/store'
 // import useAction from './hooks/useAction';
 // const action = useAction();
 
+        
 const { dispatch } = store;
 
 const options = {
@@ -123,10 +124,10 @@ function dealVideoCallOffer(message:any, userId:UserId){
             type: ActionTypes.MessageOfVideoCall,
             payload: message
         });
-        dispatch({
-            type: ActionTypes.VideoCall,
-            payload: true
-        });
+        // dispatch({
+        //     type: ActionTypes.VideoCall,
+        //     payload: true
+        // });
     }
 }
 socket.on('message', async (message: any) => {
@@ -147,9 +148,13 @@ socket.on('message', async (message: any) => {
     const linkman = state.linkmans[message.to];
     let title = '';
     // (linkman)
-    if(message.type == 'videoCallOffer') {
-        return dealVideoCallOffer(message, state.user?._id)
+    if(message.type == 'videoCallOffer' || message.type == 'videoCallAnswer' || message.type == 'offer_ice' || message.type == 'answer_ice') {
+        dealVideoCallOffer(message, state.user?._id)
+        return;
     }
+
+
+
 
     if (linkman) {
         dispatch({

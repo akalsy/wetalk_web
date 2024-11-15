@@ -1,3 +1,11 @@
+/*
+ * @Author: akalsy hermanyu666@gmail.com
+ * @Date: 2023-10-18 16:22:56
+ * @LastEditors: akalsy hermanyu666@gmail.com
+ * @LastEditTime: 2024-11-15 18:11:33
+ * @FilePath: /wetalk_web/src/config/client.ts
+ * @Description: Description
+ */
 import { MB } from '../utils/const';
 
 export default {

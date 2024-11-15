@@ -2,11 +2,11 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-28 15:42:39
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-11-04 11:20:14
- * @FilePath: /wetalk_web/src/utils/rtcConnect.ts
+ * @LastEditTime: 2024-11-15 13:00:27
+ * @FilePath: /wetalk_web/src/modules/videoCall/rtcConnect.ts
  * @Description: Description
  */
-import { sendMessage } from '../service';
+import { sendMessage } from '../../service';
 
 export default class RtcConnect {
     public loggerEl: any;
@@ -49,21 +49,21 @@ export default class RtcConnect {
                 this.remoteVideo.current.srcObject = e.streams[0];
             }
         };
-        this.peer.onicecandidate = (e: { candidate: any }) => {
-            if (e.candidate) {
-                this.messageLog('搜集并发送候选人');
-                sendMessage(
-                    focus,
-                    'videoCallOffer',
-                    JSON.stringify({
-                        type: `${this.target}_ice`,
-                        iceCandidate: e.candidate,
-                    }),
-                );
-            } else {
-                this.messageLog('候选人收集完成！');
-            }
-        };
+        // this.peer.onicecandidate = (e: { candidate: any }) => {
+        //     console.log(e)
+        //     if (e.candidate) {
+        //         this.messageLog('搜集并发送候选人');
+        //         sendMessage(
+        //             focus,
+        //             `${this.target}_ice`,
+        //             JSON.stringify({
+        //                 iceCandidate: e.candidate,
+        //             }),
+        //         );
+        //     } else {
+        //         this.messageLog('候选人收集完成！');
+        //     }
+        // };
         !PeerConnection && this.messageError('浏览器不支持WebRTC！');
     }
 
@@ -84,13 +84,13 @@ export default class RtcConnect {
 
     async answerCall(offerSdp: any, focus: string) {
         this.messageLog('接收到发送方SDP');
-        await this.peer.setRemoteDescription(offerSdp);
+        await this.peer?.setRemoteDescription(offerSdp);
 
         this.messageLog('创建接收方（应答）SDP');
-        const answer = await this.peer.createAnswer();
+        const answer = await this.peer?.createAnswer();
         this.messageLog(`传输接收方（应答）SDP`);
         sendMessage(focus, 'videoCallAnswer', JSON.stringify(answer));
-        await this.peer.setLocalDescription(answer);
+        await this.peer?.setLocalDescription(answer);
     }
 
 
