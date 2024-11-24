@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-26 13:55:42
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-11-25 00:48:33
+ * @LastEditTime: 2024-11-25 00:52:12
  * @FilePath: /wetalk_web/src/modules/videoCall/index.tsx
  * @Description: Description
  */
@@ -24,9 +24,7 @@ export default function VideoCall(props: any) {
     const remoteVideo: any = useRef(null);
     const localVideo: any = useRef(null)
     const loggerEl: any = useRef(null)
-    let rtcConnect: any = useRef(null);
 
-    console.log('11111111111',messageOfCall)
 
     const [linkedId, setLinledId] = useState("")
     const selfId =
@@ -64,7 +62,6 @@ export default function VideoCall(props: any) {
 
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             if (localVideo.current) {
-                console.log(stream)
                 localVideo.current.srcObject = stream;
             }
             messageLog('摄像头/麦克风获取成功！');
@@ -81,13 +78,11 @@ export default function VideoCall(props: any) {
             (window as any).mozRTCPeerConnection ||
             (window as any).webkitRTCPeerConnection;
         const peerNow: any = new PeerConnection();
-        console.log(peerNow)
         // setPeer(peerNow)
         messageLog('信令通道（WebSocket）创建中......');
         peerNow.ontrack = (e: { streams: MediaStream[] }) => {
             if (e && e.streams) {
                 messageLog('收到对方音频/视频流数据...');
-                console.log(e.streams)
                 remoteVideo.current.srcObject = e.streams[0];
             }
         };
@@ -101,14 +96,13 @@ export default function VideoCall(props: any) {
             console.log('ICE connection state:', peerNow.iceConnectionState);
         };
         peerNow.onicecandidate = (e: { candidate: any }) => {
-            console.log(e)
             if (e.candidate) {
                 messageLog('搜集并发送候选人');
                 sendMessage(
                     offerId,
                     `${type}_ice`,
                     JSON.stringify({
-                        type:`${type}_ice`,
+                        type: `${type}_ice`,
                         iceCandidate: e.candidate,
                     }),
                 );
@@ -176,11 +170,9 @@ export default function VideoCall(props: any) {
             from = messageOfCall?.from;
 
             if (type === 'answer_ice') {
-                console.log('answer_ice', peer)
                 peer?.addIceCandidate(iceCandidate);
             }
             if (type === 'offer_ice') {
-                console.log('offer_ice', peer)
                 peer?.addIceCandidate(iceCandidate);
             }
             if (messageOfCall?.type == 'startLive') {
@@ -189,22 +181,18 @@ export default function VideoCall(props: any) {
                 startLive();
             }
             if (messageOfCall?.type == 'videoCallOffer') {
-                console.log('videoCallOffer', peer)
                 setTaget('answer');
                 setLinledId(from?._id + selfId);
                 answerCall(content, from?._id + selfId, 'answer');
             }
 
             if (messageOfCall?.type == 'videoCallAnswer') {
-                console.log('videoCallAnswer', peer)
                 if (peer) {
-                    console.log('Setting remote answer:', content);
                     await peer.setRemoteDescription(new RTCSessionDescription(content));
                 }
             }
         }
-
-        console.log(222222,messageOfCall)
+        console.log('messageOfCall', messageOfCall)
         onMessage(messageOfCall)
 
 
