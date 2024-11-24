@@ -119,11 +119,7 @@ function App() {
     [backgroundImage],
   );
 
-  const videoStyle = {
-    backgroundColor: "#fff",
-    width: `${width * 100}%`,
-    height: `${height * 100}%`,
-  }
+
 
   const [userInfoDialog, toggleUserInfoDialog] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
@@ -155,9 +151,16 @@ function App() {
   }
 
 
+  const videoStyle = useMemo(
+    () => ({
+      backgroundColor: "#fff",
+      width: `${width * 100}%`,
+      height: `${height * 100}%`,
+      display: videoCallState ? 'block' : "none"
+    }), [videoCallState])
+
   useEffect(() => {
-    console.log("callOfMessage:", callOfMessage)
-    if(callOfMessage?.type == "videoCallOffer") {
+    if (callOfMessage?.type == "videoCallOffer") {
       setCallTitle(`来自${callOfMessage?.from?.username}的视频通话`);
       setCallDialogStatus(true)
     }
@@ -191,8 +194,10 @@ function App() {
           // console.log(1)
         }} role="button"> 登陆</b>后加入聊天
       </div>}
-      {videoCallState && <VideoCall style={videoStyle} closeVideoCall={() => setVideoCallVisiable(false)} setVideoCallState={() => setVideoCallVisiable(true)}>
-      </VideoCall>}
+      <div style={videoStyle}>
+        <VideoCall closeVideoCall={() => setVideoCallVisiable(false)} setVideoCallState={() => setVideoCallVisiable(true)}>
+        </VideoCall>
+      </div>
       {isLogin && <UserInfo
         visible={userInfoDialog}
         onClose={() => toggleUserInfoDialog(false)}

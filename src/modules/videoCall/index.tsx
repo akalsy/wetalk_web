@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-26 13:55:42
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-11-15 18:38:15
+ * @LastEditTime: 2024-11-25 00:48:33
  * @FilePath: /wetalk_web/src/modules/videoCall/index.tsx
  * @Description: Description
  */
@@ -25,6 +25,10 @@ export default function VideoCall(props: any) {
     const localVideo: any = useRef(null)
     const loggerEl: any = useRef(null)
     let rtcConnect: any = useRef(null);
+
+    console.log('11111111111',messageOfCall)
+
+    const [linkedId, setLinledId] = useState("")
     const selfId =
         useSelector((state: State) => state.user && state.user._id) || '';
     function messageLog(msg: string) {
@@ -71,7 +75,7 @@ export default function VideoCall(props: any) {
         }
     };
 
-    async function peerConnection() {
+    async function peerConnection(offerId: string, type: string) {
         const PeerConnection =
             window.RTCPeerConnection ||
             (window as any).mozRTCPeerConnection ||
@@ -95,22 +99,23 @@ export default function VideoCall(props: any) {
 
         peerNow.oniceconnectionstatechange = () => {
             console.log('ICE connection state:', peerNow.iceConnectionState);
-          };
-        // peerNow.onicecandidate = (e: { candidate: any }) => {
-        //     console.log(e)
-        //     if (e.candidate) {
-        //         messageLog('搜集并发送候选人');
-        //         // sendMessage(
-        //         //     focus,
-        //         //     `${target}_ice`,
-        //         //     JSON.stringify({
-        //         //         iceCandidate: e.candidate,
-        //         //     }),
-        //         // );
-        //     } else {
-        //         messageLog('候选人收集完成！');
-        //     }
-        // };
+        };
+        peerNow.onicecandidate = (e: { candidate: any }) => {
+            console.log(e)
+            if (e.candidate) {
+                messageLog('搜集并发送候选人');
+                sendMessage(
+                    offerId,
+                    `${type}_ice`,
+                    JSON.stringify({
+                        type:`${type}_ice`,
+                        iceCandidate: e.candidate,
+                    }),
+                );
+            } else {
+                messageLog('候选人收集完成！');
+            }
+        };
         !PeerConnection && messageError('浏览器不支持WebRTC！');
         setPeer(peerNow)
         return peerNow;
@@ -119,9 +124,9 @@ export default function VideoCall(props: any) {
 
 
 
-    async function answerCall(offer: any, offerId: string) {
+    async function answerCall(offer: any, offerId: string, type: string) {
         messageLog('接收到发送方SDP');
-        let peer = await peerConnection();
+        let peer = await peerConnection(offerId, type);
         if (peer) {
             await peer?.setRemoteDescription(new RTCSessionDescription(offer));
             const answer = await peer?.createAnswer();
@@ -131,7 +136,7 @@ export default function VideoCall(props: any) {
     }
 
     const startLive = async () => {
-        let peer = await peerConnection();
+        let peer = await peerConnection(focus, 'offer');
         if (peer) {
             messageLog('创建本地SDP');
             const offer = await peer.createOffer();
@@ -170,13 +175,24 @@ export default function VideoCall(props: any) {
             }
             from = messageOfCall?.from;
 
+            if (type === 'answer_ice') {
+                console.log('answer_ice', peer)
+                peer?.addIceCandidate(iceCandidate);
+            }
+            if (type === 'offer_ice') {
+                console.log('offer_ice', peer)
+                peer?.addIceCandidate(iceCandidate);
+            }
             if (messageOfCall?.type == 'startLive') {
                 setTaget('offer');
+                setLinledId(focus);
                 startLive();
             }
             if (messageOfCall?.type == 'videoCallOffer') {
+                console.log('videoCallOffer', peer)
                 setTaget('answer');
-                answerCall(content, from?._id + selfId);
+                setLinledId(from?._id + selfId);
+                answerCall(content, from?._id + selfId, 'answer');
             }
 
             if (messageOfCall?.type == 'videoCallAnswer') {
@@ -187,6 +203,8 @@ export default function VideoCall(props: any) {
                 }
             }
         }
+
+        console.log(222222,messageOfCall)
         onMessage(messageOfCall)
 
 
@@ -202,8 +220,8 @@ export default function VideoCall(props: any) {
 
     return <div className={style.videocall}>
         <i className={`${style.iconfont} iconfont icon-close`} onClick={() => close()}></i>
-        <video autoPlay className={style.remotevideo} ref={localVideo}></video>
-        <video autoPlay className={style.localvideo} ref={remoteVideo} muted></video>
+        <video autoPlay className={style.remotevideo} ref={remoteVideo}></video>
+        <video autoPlay className={style.localvideo} ref={localVideo} muted></video>
         <div className={style.logger} ref={loggerEl}></div>
     </div>
 }
