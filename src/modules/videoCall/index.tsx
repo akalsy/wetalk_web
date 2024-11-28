@@ -2,7 +2,7 @@
  * @Author: akalsy hermanyu666@gmail.com
  * @Date: 2024-06-26 13:55:42
  * @LastEditors: akalsy hermanyu666@gmail.com
- * @LastEditTime: 2024-11-25 00:52:12
+ * @LastEditTime: 2024-11-28 22:41:56
  * @FilePath: /wetalk_web/src/modules/videoCall/index.tsx
  * @Description: Description
  */
@@ -12,8 +12,10 @@ import { useSelector } from 'react-redux';
 import useAction from '../../hooks/useAction';
 import { sendMessage } from '../../service';
 import style from './index.less'
-import RtcConnect from './rtcConnect'
 import { State } from '../../state/reducer';
+
+import Dialog from '../../components/Dialog/Dialog';
+import Button from "../../components/Button/Button"
 export default function VideoCall(props: any) {
     const action = useAction();
     const [target, setTaget] = useState("");
@@ -24,9 +26,10 @@ export default function VideoCall(props: any) {
     const remoteVideo: any = useRef(null);
     const localVideo: any = useRef(null)
     const loggerEl: any = useRef(null)
+    const [callDialogStatus, setCallDialogStatus] = useState(false)
+    const [callTitle, setCallTitle] = useState("")
+    const [offerMessage, setOfferMessage]: [any, any] = useState({})
 
-
-    const [linkedId, setLinledId] = useState("")
     const selfId =
         useSelector((state: State) => state.user && state.user._id) || '';
     function messageLog(msg: string) {
@@ -177,13 +180,12 @@ export default function VideoCall(props: any) {
             }
             if (messageOfCall?.type == 'startLive') {
                 setTaget('offer');
-                setLinledId(focus);
                 startLive();
             }
             if (messageOfCall?.type == 'videoCallOffer') {
-                setTaget('answer');
-                setLinledId(from?._id + selfId);
-                answerCall(content, from?._id + selfId, 'answer');
+                setCallTitle(`来自${from?.username}的视频通话`);
+                setCallDialogStatus(true)
+                setOfferMessage(messageOfCall)
             }
 
             if (messageOfCall?.type == 'videoCallAnswer') {
@@ -191,11 +193,14 @@ export default function VideoCall(props: any) {
                     await peer.setRemoteDescription(new RTCSessionDescription(content));
                 }
             }
+
+            if (messageOfCall?.type == 'disOnCall') {
+                messageLog('对方暂时无法接听');
+                close();
+            }
         }
         console.log('messageOfCall', messageOfCall)
         onMessage(messageOfCall)
-
-
     }, [messageOfCall])
 
 
@@ -204,6 +209,30 @@ export default function VideoCall(props: any) {
         action.setVideoCallState(false)
     }
 
+    function handleOnCall() {
+
+        let from, content;
+        if (offerMessage?.content) {
+            content = JSON.parse(offerMessage?.content);
+        }
+        from = offerMessage?.from;
+        console.log(messageOfCall)
+        setTaget('answer');
+        answerCall(content, from?._id + selfId, 'answer');
+        setCallDialogStatus(false)
+    }
+
+
+    const handleDisOncall = useCallback(() => {
+        setCallDialogStatus(false);
+        if (offerMessage?.from?._id) {
+            sendMessage(offerMessage?.from?._id + selfId, 'disOnCall', JSON.stringify({
+                data: "disOnCall"
+            }))
+        }
+        close();
+    }, [offerMessage])
+
 
 
     return <div className={style.videocall}>
@@ -211,5 +240,25 @@ export default function VideoCall(props: any) {
         <video autoPlay className={style.remotevideo} ref={remoteVideo}></video>
         <video autoPlay className={style.localvideo} ref={localVideo} muted></video>
         <div className={style.logger} ref={loggerEl}></div>
+        <Dialog
+            className={style.deleteGroupConfirmDialog}
+            title={callTitle}
+            visible={callDialogStatus}
+            onClose={() => setCallDialogStatus(false)}
+        >
+            <Button
+                className={style.deleteGroupConfirmButton}
+                type="danger"
+                onClick={handleOnCall}
+            >
+                接听
+            </Button>
+            <Button
+                className={style.deleteGroupConfirmButton}
+                onClick={() => { handleDisOncall() }}
+            >
+                取消
+            </Button>
+        </Dialog>
     </div>
 }

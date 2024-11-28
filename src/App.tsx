@@ -17,8 +17,6 @@ import useIsLogin from './hooks/useIsLogin';
 import useAction from './hooks/useAction';
 import useIsVideoCall, { useCallOfMessage } from './hooks/useIsVideoCall';
 
-import Dialog from './components/Dialog/Dialog';
-import Button from "./components/Button/Button"
 
 /**
 * 获取窗口宽度百分比
@@ -45,8 +43,7 @@ function App() {
   // 计算窗口高度/宽度百分比
   const [width, setWidth] = useState(getWidthPercent());
   const [height, setHeight] = useState(getHeightPercent());
-  const [callDialogStatus, setCallDialogStatus] = useState(false)
-  const [callTitle, setCallTitle] = useState("")
+
 
   useEffect(() => {
     window.onresize = () => {
@@ -161,16 +158,15 @@ function App() {
 
   useEffect(() => {
     if (callOfMessage?.type == "videoCallOffer") {
-      setCallTitle(`来自${callOfMessage?.from?.username}的视频通话`);
-      setCallDialogStatus(true)
+      action.setVideoCallState(true)
     }
   }, [callOfMessage])
 
 
-  const handleOnCall = () => {
-    setCallDialogStatus(false)
-    action.setVideoCallState(true)
-  }
+  // const handleOnCall = () => {
+  //   setCallDialogStatus(false)
+  //   action.setVideoCallState(true)
+  // }
 
 
   return (
@@ -211,26 +207,7 @@ function App() {
         group={groupInfo}
       />}
 
-      <Dialog
-        className={Style.deleteGroupConfirmDialog}
-        title={callTitle}
-        visible={callDialogStatus}
-        onClose={() => setCallDialogStatus(false)}
-      >
-        <Button
-          className={Style.deleteGroupConfirmButton}
-          type="danger"
-          onClick={handleOnCall}
-        >
-          接听
-        </Button>
-        <Button
-          className={Style.deleteGroupConfirmButton}
-          onClick={() => setCallDialogStatus(false)}
-        >
-          取消
-        </Button>
-      </Dialog>
+
 
     </div>
   );

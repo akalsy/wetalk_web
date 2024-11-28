@@ -26,7 +26,7 @@ import store from './state/store'
 // import useAction from './hooks/useAction';
 // const action = useAction();
 
-        
+
 const { dispatch } = store;
 
 const options = {
@@ -118,8 +118,8 @@ let prevFrom: string | null = '';
 let prevName = '';
 
 type UserId = string | undefined
-function dealVideoCallOffer(message:any, userId:UserId){
-    if(message.to.includes(userId)) {
+function dealVideoCallOffer(message: any, userId: UserId) {
+    if (message.to.includes(userId)) {
         dispatch({
             type: ActionTypes.MessageOfVideoCall,
             payload: message
@@ -148,7 +148,7 @@ socket.on('message', async (message: any) => {
     const linkman = state.linkmans[message.to];
     let title = '';
     // (linkman)
-    if(message.type == 'videoCallOffer' || message.type == 'videoCallAnswer' || message.type == 'offer_ice' || message.type == 'answer_ice') {
+    if (message.type == 'videoCallOffer' || message.type == 'videoCallAnswer' || message.type == 'offer_ice' || message.type == 'answer_ice' || message.type == 'disOnCall') {
         dealVideoCallOffer(message, state.user?._id)
         return;
     }
@@ -235,8 +235,7 @@ socket.on('message', async (message: any) => {
 
             const from =
                 linkman && linkman.type === 'group'
-                    ? `${message.from.username}${
-                        linkman.name === prevName ? '' : `在${linkman.name}`
+                    ? `${message.from.username}${linkman.name === prevName ? '' : `在${linkman.name}`
                     }说`
                     : `${message.from.username}对你说`;
             if (text) {
